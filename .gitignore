@@ -46,3 +46,7 @@ dist/
 .env
 .env.*
 !.env.example
+
+
+# Temporary local backups
+/backup/
