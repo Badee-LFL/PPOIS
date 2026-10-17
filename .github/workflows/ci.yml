@@ -26,13 +26,12 @@ jobs:
 
     - name: Check Code Quality with Linter (Flake8)
       run: |
-        # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all quality style warnings as advice so it doesn't crash your build yet
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=150 --statistics
 
     - name: Execute Automated Unit Tests with Pytest
-      env:
-        PYTHONPATH: ./lab1/3D_vector/src:./lab1/Polynomial/src
       run: |
-        pytest
+        # We explicitly pass the Python paths and the exact names of your test files here
+        python -m pytest lab1/tests/testVector.py lab1/tests/testmain.py --import-mode=importlib
+      env:
+        PYTHONPATH: "lab1/3D_vector"
