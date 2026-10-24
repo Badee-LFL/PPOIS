@@ -1,15 +1,16 @@
-from Polynomial import Polynomial
+"""Console menu for the Polynomial class."""
+try:
+    from .Polynomial import Polynomial
+except ImportError:
+    from Polynomial import Polynomial
 
 
 def get_polynomial(prompt: str) -> Polynomial:
-    """Prompts the user until a valid comma-separated string of coefficients is entered."""
     while True:
         try:
             raw_input = input(prompt).strip()
             if not raw_input:
                 raise ValueError("Input cannot be empty.")
-            
-            # Parse comma-separated coefficients (e.g., "1, 2, 3" -> [1.0, 2.0, 3.0])
             parts = [float(num.strip()) for num in raw_input.split(",")]
             return Polynomial(*parts)
         except (TypeError, ValueError) as error:
@@ -17,7 +18,10 @@ def get_polynomial(prompt: str) -> Polynomial:
 
 
 def main_menu() -> None:
-    print("Enter two polynomials to start by providing coefficients in ascending power order.")
+    print(
+        "Enter two polynomials to start by providing coefficients "
+        "in ascending power order."
+    )
     print("Example: entering '1,2,3' creates 3.0x^2 + 2.0x + 1.0")
     print("-" * 75)
     first = get_polynomial("First polynomial coefficients: ")
@@ -44,7 +48,7 @@ def main_menu() -> None:
             if choice == "1":
                 first = get_polynomial("First polynomial coefficients: ")
                 second = get_polynomial("Second polynomial coefficients: ")
-                input("\nPolynomials updated successfully! Press Enter to continue...")
+                input("\nPolynomials updated. Press Enter...")
             elif choice == "2":
                 print("\nResult:", first + second)
                 input("\nPress Enter to return to menu...")
@@ -63,8 +67,13 @@ def main_menu() -> None:
                 input("\nPress Enter to return to menu...")
             elif choice == "7":
                 try:
-                    x_val = float(input("Enter a real number value for x: ").strip())
-                    print(f"\nResult of evaluation at x={x_val}:", first.evaluate(x_val))
+                    x_val = float(
+                        input("Enter a real number value for x: ").strip()
+                    )
+                    print(
+                        f"\nResult of evaluation at x={x_val}:",
+                        first(x_val),
+                    )
                 except ValueError:
                     print("\nInvalid number provided for x.")
                 input("\nPress Enter to return to menu...")
@@ -78,7 +87,7 @@ def main_menu() -> None:
                 print("Please choose a number from 1-9.")
                 input("\nPress Enter to try again...")
         except (TypeError, ValueError, ZeroDivisionError) as error:
-            print(f"Could not perform that operation: {error}")
+            print(f"Error: {error}")
             input("\nPress Enter to return to menu...")
 
 

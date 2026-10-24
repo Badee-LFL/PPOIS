@@ -78,29 +78,40 @@ class Polynomial:
             result = result * value + coefficient
         return result
 
+    def __call__(self, x: Real) -> float:
+        return self.evaluate(x)
+
     def __add__(self, other: object) -> Self:
         if not self.is_valid_polynomial(other):
             return NotImplemented
         size = max(len(self.__coefficients), len(other.__coefficients))
-        return type(self)(*(self[index] + other[index] for index in range(size)))
+        return type(self)(
+            *(self[index] + other[index] for index in range(size))
+        )
 
     def __sub__(self, other: object) -> Self:
         if not self.is_valid_polynomial(other):
             return NotImplemented
         size = max(len(self.__coefficients), len(other.__coefficients))
-        return type(self)(*(self[index] - other[index] for index in range(size)))
+        return type(self)(
+            *(self[index] - other[index] for index in range(size))
+        )
 
     def __mul__(self, other: object) -> Self:
         if isinstance(other, Real) and not isinstance(other, bool):
             if not self.is_valid_coefficient(other):
                 self.__raise_invalid_coefficient(other)
             scalar = float(other)
-            return type(self)(*(value * scalar for value in self.__coefficients))
+            return type(self)(
+                *(value * scalar for value in self.__coefficients)
+            )
 
         if not self.is_valid_polynomial(other):
             return NotImplemented
 
-        result_size = len(self.__coefficients) + len(other.__coefficients) - 1
+        result_size = (
+            len(self.__coefficients) + len(other.__coefficients) - 1
+        )
         result = [DEFAULT_COEFFICIENT] * result_size
         for left_power, left_value in enumerate(self.__coefficients):
             for right_power, right_value in enumerate(other.__coefficients):
@@ -112,12 +123,14 @@ class Polynomial:
 
     def __truediv__(self, other: object) -> Self:
         if isinstance(other, Real) and not isinstance(other, bool):
-            if not self.is_valid_coefficient(other):     
+            if not self.is_valid_coefficient(other):
                 self.__raise_invalid_coefficient(other)
             divisor = float(other)
             if divisor == DEFAULT_COEFFICIENT:
                 raise ZeroDivisionError("Cannot divide by zero.")
-            return type(self)(*(value / divisor for value in self.__coefficients))
+            return type(self)(
+                *(value / divisor for value in self.__coefficients)
+            )
 
         if not self.is_valid_polynomial(other):
             return NotImplemented
@@ -130,12 +143,16 @@ class Polynomial:
     def __divide_by_constant(self, divisor: float) -> Self:
         if divisor == DEFAULT_COEFFICIENT:
             raise ZeroDivisionError("Cannot divide by zero.")
-        return type(self)(*(value / divisor for value in self.__coefficients))
+        return type(self)(
+            *(value / divisor for value in self.__coefficients)
+        )
 
     def __divide_by_polynomial(self, divisor: Self) -> Self:
         remainder = list(self.__coefficients)
         divisor_coefficients = divisor.coefficients
-        quotient_size = max(1, len(remainder) - len(divisor_coefficients) + 1)
+        quotient_size = max(
+            1, len(remainder) - len(divisor_coefficients) + 1
+        )
         quotient = [DEFAULT_COEFFICIENT] * quotient_size
         self.__trim_remainder(remainder)
 
@@ -151,7 +168,9 @@ class Polynomial:
             self.__trim_remainder(remainder)
 
         if any(abs(value) >= DIVISION_TOLERANCE for value in remainder):
-            raise ValueError("Polynomial division has a nonzero remainder.")
+            raise ValueError(
+                "Polynomial division has a nonzero remainder."
+            )
         return type(self)(*quotient)
 
     def __trim_remainder(self, remainder: list[float]) -> None:
@@ -160,20 +179,27 @@ class Polynomial:
             and abs(remainder[-1]) < DIVISION_TOLERANCE
         ):
             remainder.pop()
-        if len(remainder) == 1 and abs(remainder[0]) < DIVISION_TOLERANCE:  
-            remainder[0] = DEFAULT_COEFFICIENT  
-
+        if (
+            len(remainder) == 1
+            and abs(remainder[0]) < DIVISION_TOLERANCE
+        ):
+            remainder[0] = DEFAULT_COEFFICIENT
 
     def __eq__(self, other: object) -> bool:
         if not self.is_valid_polynomial(other):
             return NotImplemented
         return self.__coefficients == other.__coefficients
 
+    def __hash__(self) -> int:
+        return hash(self.__coefficients)
+
     def __neg__(self) -> Self:
         return type(self)(*(-value for value in self.__coefficients))
 
     def __str__(self) -> str:
-        return f"[{', '.join(f'{value:g}' for value in self.__coefficients)}]"
+        return (
+            f"[{', '.join(f'{value:g}' for value in self.__coefficients)}]"
+        )
 
     def __repr__(self) -> str:
         values = ", ".join(repr(value) for value in self.__coefficients)
@@ -189,7 +215,9 @@ class Polynomial:
         if not cleaned:
             return cls(DEFAULT_COEFFICIENT)
         try:
-            coefficients = [float(part.strip()) for part in cleaned.split(",")]
+            coefficients = [
+                float(part.strip()) for part in cleaned.split(",")
+            ]
         except ValueError as error:
             raise ValueError("Coefficients must be numeric.") from error
         return cls(*coefficients)

@@ -165,6 +165,10 @@ class Vector3D:
             for first, second in zip(self.coordinates, other.coordinates)
         )
 
+    def __hash__(self) -> int:
+        """Hash on the exact coordinate tuple."""
+        return hash(self.coordinates)
+
     def __lt__(self, other: object) -> bool:
         """Compare vectors by length."""
         self.__require_vector(other)

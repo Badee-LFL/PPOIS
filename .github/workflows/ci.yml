@@ -1,37 +1,40 @@
-name: CI/CD Testing & Code Quality Pipeline
+name: Python CI
 
 on:
   push:
-    branches: [ "main", "feature_0" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  test-vector:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository Code
-      uses: actions/checkout@v4
-
-    - name: Set up Python Environment
+    - uses: actions/checkout@v4
+    - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.13'
-
-    - name: Install System Dependencies
+    - name: Install dependencies
+      run: pip install coverage
+    - name: Run Vector tests
+      working-directory: ./lab1/3D_Vector/tests
       run: |
-        python -m pip install --upgrade pip
-        pip install pytest flake8
+        coverage run testVector.py
+        coverage report -m --fail-under=90
 
-    - name: Check Code Quality with Linter (Flake8)
+  test-polynomial:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - name: Install dependencies
+      run: pip install coverage
+    - name: Run Polynomial tests
+      working-directory: ./lab1/Polynomial/tests
       run: |
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=150 --statistics
-
-    - name: Execute Automated Unit Tests with Pytest
-      run: |
-        # We explicitly pass the Python paths and the exact names of your test files here
-        python -m pytest lab1/tests/testVector.py lab1/tests/testmain.py --import-mode=importlib
-      env:
-        PYTHONPATH: "lab1/3D_vector"
+        coverage run testPolynomial.py
+        coverage report -m --fail-under=90

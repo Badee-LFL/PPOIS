@@ -1,12 +1,12 @@
-"""Unit tests for Polynomial. Run: python -m unittest -v test_polynomial.py"""
-
+"""Unit tests for Polynomial."""
 import unittest
 import sys
-from pathlib import Path
+import os
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+# Look in the folder ABOVE 'tests' (which is Polynomial)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from Polynomial import Polynomial
+from src.Polynomial import Polynomial
 
 
 class TestPolynomial(unittest.TestCase):
@@ -49,8 +49,11 @@ class TestPolynomial(unittest.TestCase):
             _ = polynomial[1.5]
 
     def test_evaluation(self):
-        # Polynomial is 1 + 2x + 3x^2; at x=2 the value is 17.
         self.assertEqual(Polynomial(1, 2, 3).evaluate(2), 17.0)
+
+    def test_call_delegates_to_evaluate(self):
+        polynomial = Polynomial(1, 2, 3)
+        self.assertEqual(polynomial(2), polynomial.evaluate(2))
 
     def test_addition_and_subtraction(self):
         first = Polynomial(1, 2)
@@ -58,8 +61,23 @@ class TestPolynomial(unittest.TestCase):
         self.assertEqual(first + second, Polynomial(4, 3))
         self.assertEqual(first - second, Polynomial(-2, 1))
 
+    def test_in_place_addition_and_subtraction(self):
+        polynomial = Polynomial(1, 2)
+        polynomial += Polynomial(3, 1)
+        self.assertEqual(polynomial, Polynomial(4, 3))
+        polynomial -= Polynomial(3, 1)
+        self.assertEqual(polynomial, Polynomial(1, 2))
+
     def test_polynomial_multiplication(self):
-        self.assertEqual(Polynomial(1, 2) * Polynomial(3, 1), Polynomial(3, 7, 2))
+        self.assertEqual(
+            Polynomial(1, 2) * Polynomial(3, 1),
+            Polynomial(3, 7, 2),
+        )
+
+    def test_in_place_multiplication(self):
+        polynomial = Polynomial(1, 2)
+        polynomial *= Polynomial(3, 1)
+        self.assertEqual(polynomial, Polynomial(3, 7, 2))
 
     def test_scalar_multiplication_and_negation(self):
         polynomial = Polynomial(1, 2)
@@ -72,9 +90,14 @@ class TestPolynomial(unittest.TestCase):
         with self.assertRaises(ZeroDivisionError):
             _ = Polynomial(1) / 0
 
+    def test_in_place_division(self):
+        polynomial = Polynomial(2, 4, 6)
+        polynomial /= 2
+        self.assertEqual(polynomial, Polynomial(1, 2, 3))
+
     def test_polynomial_division(self):
-        dividend = Polynomial(-1, 0, 1)  # x^2 - 1
-        divisor = Polynomial(-1, 1)       # x - 1
+        dividend = Polynomial(-1, 0, 1)
+        divisor = Polynomial(-1, 1)
         self.assertEqual(dividend / divisor, Polynomial(1, 1))
 
     def test_polynomial_division_errors(self):
@@ -88,6 +111,11 @@ class TestPolynomial(unittest.TestCase):
         copied = original.copy()
         self.assertEqual(copied, original)
         self.assertIsNot(copied, original)
+
+    def test_hash_is_available(self):
+        polynomial = Polynomial(1, 2, 3)
+        self.assertEqual(hash(polynomial), hash(polynomial.coefficients))
+        self.assertEqual(len({polynomial, Polynomial(1, 2, 3)}), 1)
 
     def test_string_conversion_and_factory(self):
         polynomial = Polynomial(1, 2, 3)

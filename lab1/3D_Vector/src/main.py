@@ -1,4 +1,8 @@
-from Vector import Vector3D 
+"""Console menu for the Vector3D class."""
+try:
+    from .Vector import Vector3D
+except ImportError:
+    from Vector import Vector3D
 
 
 def get_vector(prompt: str) -> Vector3D:
@@ -34,7 +38,7 @@ def main_menu() -> None:
             if choice == "1":
                 first = get_vector("First vector: ")
                 second = get_vector("Second vector: ")
-                input("\nVectors updated successfully! Press Enter to continue...")
+                input("\nVectors updated. Press Enter...")
             elif choice == "2":
                 print("\nResult:", first + second)
                 input("\nPress Enter to return to menu...")
@@ -61,7 +65,7 @@ def main_menu() -> None:
                 print("Please choose a number from 1-8.")
                 input("\nPress Enter to try again...")
         except (TypeError, ValueError, ZeroDivisionError) as error:
-            print(f"Could not perform that operation: {error}")
+            print(f"Error: {error}")
             input("\nPress Enter to return to menu...")
 
 
