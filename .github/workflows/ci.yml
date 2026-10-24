@@ -3,6 +3,8 @@ name: Python CI
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - 'v*' # This tells the CI to run when you push a version tag
   pull_request:
     branches: [ "main" ]
 
@@ -38,3 +40,34 @@ jobs:
       run: |
         coverage run testPolynomial.py
         coverage report -m --fail-under=90
+
+  # --- NEW RELEASE JOB ---
+  release:
+    needs: [test-vector, test-polynomial] # Only runs if tests pass
+    if: startsWith(github.ref, 'refs/tags/v') # Only runs if you push a tag starting with 'v'
+    runs-on: windows-latest # Using Windows so the instructor gets .exe files
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build Vector Executable
+        working-directory: ./lab1/3D_Vector/src
+        run: pyinstaller --onefile --name VectorApp main.py
+
+      - name: Build Polynomial Executable
+        working-directory: ./lab1/Polynomial/src
+        run: pyinstaller --onefile --name PolynomialApp main.py
+
+      - name: Publish Release with Executables
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            lab1/3D_Vector/src/dist/VectorApp.exe
+            lab1/Polynomial/src/dist/PolynomialApp.exe
