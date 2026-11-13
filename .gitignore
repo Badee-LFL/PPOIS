@@ -1,14 +1,16 @@
+# Ignore OS and system files
+.cache/
+.local/
+.config/
+.Trash/
 __pycache__/
-*.pyc
-*.pyo
-.pytest_cache/
+*.py[cod]
 .coverage
-htmlcov/
-docs/
+htmlco
 .venv/
 venv/
+*.egg-info/
+dist/
+build/
 .idea/
 .vscode/
-*.egg-info/
-build/
-dist/
