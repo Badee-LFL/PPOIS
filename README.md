@@ -14,5 +14,6 @@ To run tests and check coverage locally:
 ```bash
 # Example for Lab 2
 cd lab2/Pharma_Distribution
-pytest tests/ --cov=src --cov-fail-under=90
-
+python -m coverage run tests/testPolynomial.py
+for report : 
+python -m coverage report -m
