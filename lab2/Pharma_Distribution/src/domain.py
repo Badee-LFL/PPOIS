@@ -5,9 +5,9 @@ from exceptions import (
     DuplicateMedicineException, SupplierNotApprovedException
 )
 
-# ==========================================
+
 # 1. CORE PHARMA CLASSES
-# ==========================================
+
 
 class Manufacturer:
     def __init__(self, name: str, country: str, license_number: str):
@@ -389,9 +389,8 @@ class BatchTracker:
     def update_location(self, loc: str):
         self.location = loc
 
-# ==========================================
 # 5. SERVICES & ANALYTICS CLASSES
-# ==========================================
+
 
 class InventoryAnalyzer:
     def __init__(self, warehouse: Warehouse):
