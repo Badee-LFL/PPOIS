@@ -58,4 +58,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true # Automatically writes the changelog
-          files: lab1-release.zip      # Attaches the zip file to the releas
+          files: lab1-release.zip      # Attaches the zip file to the release
