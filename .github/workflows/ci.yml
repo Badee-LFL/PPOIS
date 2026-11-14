@@ -3,6 +3,8 @@ name: Python CI
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - 'lab1*'  # <--- This triggers the workflow ONLY when a tag starting with 'lab1' is pushed
   pull_request:
     branches: [ "main" ]
 
@@ -38,3 +40,22 @@ jobs:
       run: |
         coverage run testPolynomial.py
         coverage report -m --fail-under=90
+
+  # --- NEW JOB ADDED HERE ---
+  release-lab1:
+    needs: [test-vector, test-polynomial] # Only runs if the tests pass!
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Gives the Action permission to create the release
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Optional: If you want to zip your lab1 folder to attach to the release
+      - name: Zip Lab 1 files
+        run: zip -r lab1-release.zip ./lab1
+        
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true # Automatically writes the changelog
+          files: lab1-release.zip      # Attaches the zip file to the release
