@@ -36,3 +36,6 @@ class PaymentFailedException(PharmaException):
 
 class WarehouseCapacityException(PharmaException):
     pass
+
+class RecallActiveException(PharmaException):
+    pass
