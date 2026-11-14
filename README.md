@@ -17,3 +17,4 @@ cd lab2/Pharma_Distribution
 python -m coverage run tests/testPolynomial.py
 for report : 
 python -m coverage report -m
+
