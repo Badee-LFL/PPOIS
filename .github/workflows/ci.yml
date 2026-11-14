@@ -2,7 +2,7 @@ name: Python CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # <--- Triggers when code is pushed/merged to main
   pull_request:
     branches: [ "main" ]
 
@@ -38,3 +38,25 @@ jobs:
       run: |
         coverage run testPolynomial.py
         coverage report -m --fail-under=90
+
+  release-lab1:
+    needs: [test-vector, test-polynomial] # Waits for tests to pass
+    # Only run if it's a push to main (not a PR)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Zip Lab 1 files
+        run: zip -r lab1-release.zip ./lab1
+        
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # Since we aren't using tags, we need to generate a name for the release based on the commit SHA
+          tag_name: "lab1-build-${{ github.run_number }}"
+          name: "Lab 1 Automated Release #${{ github.run_number }}"
+          generate_release_notes: true
+          files: lab1-release.zip
