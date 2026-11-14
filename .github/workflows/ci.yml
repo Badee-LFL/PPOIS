@@ -2,7 +2,7 @@ name: Python CI
 
 on:
   push:
-    branches: [ "main", "feature lab1" ] # Added your branch here so it triggers
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -15,7 +15,6 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.13'
-        cache: 'pip'
     - name: Install dependencies
       run: pip install coverage
     - name: Run Vector tests
@@ -32,7 +31,6 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.13'
-        cache: 'pip'
     - name: Install dependencies
       run: pip install coverage
     - name: Run Polynomial tests
@@ -41,12 +39,16 @@ jobs:
         coverage run testPolynomial.py
         coverage report -m --fail-under=90
 
-  release-lab1:
-    needs: [test-vector, test-polynomial] # Only runs if tests pass
+  # ==========================================
+  # ADDED RELEASE JOB BELOW
+  # ==========================================
+  release-project:
+    needs: [test-vector, test-polynomial] # Only runs if your tests pass perfectly
     runs-on: ubuntu-latest
+    # This line ensures it ONLY creates a release when pushed to main (not on PRs)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' 
     permissions:
-      contents: write # REQUIRED to create a release
-    
+      contents: write # Required to create a release
     steps:
       - uses: actions/checkout@v4
       
@@ -56,7 +58,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          # Since we aren't using manual tags, we generate a new tag for every run
+          # Creates an automatic tag like "lab1-build-15" based on the run number
           tag_name: "lab1-build-${{ github.run_number }}"
           name: "Lab 1 Release - Build ${{ github.run_number }}"
           generate_release_notes: true
