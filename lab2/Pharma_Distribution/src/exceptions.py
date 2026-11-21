@@ -1,5 +1,5 @@
 class PharmaException(Exception):
-    """Base exception for all pharma-related errors."""
+    pass
 
 class InsufficientStockException(PharmaException):
     pass
@@ -35,4 +35,7 @@ class PaymentFailedException(PharmaException):
     pass
 
 class WarehouseCapacityException(PharmaException):
+    pass
+
+class RecallActiveException(PharmaException):
     pass
