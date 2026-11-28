@@ -18,6 +18,9 @@ python -m coverage run tests/testPolynomial.py
 for report : 
 python -m coverage report -m
 
+
+
+
 # Lab Assignment #1: OOP Fundamentals (Vector & Polynomial)
 
 ## Domain Description
@@ -69,6 +72,9 @@ The code is fully documented using the standard Python `pdoc` generator. The gen
 
 ## Testing and Coverage
 Both variants are covered by automated `unittest` suites (`testVector.py` and `testPolynomial.py`). The tests verify arithmetic operations, validation errors, and edge cases. A `.coveragerc` file is used to omit the CLI files (`main.py`), ensuring the automated CI/CD pipeline maintains a coverage of **over 90%** for the core domain logic.
+
+
+
 
 # Lab Assignment #2: Pharmaceutical Distribution Company
 
