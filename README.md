@@ -1,6 +1,9 @@
 # Design of Intelligent Systems Software - Lab Assignments
 
-This repository contains the lab assignments for the "Design of Intelligent Systems Software" course. 
+This repository contains the lab assignments for the "Design of Intelligent Systems Software" course.
+
+**Language:** Python 3.11
+**CI/CD:** GitHub Actions (Automated Tests, Coverage >90%, Release Artifacts)
 
 ## Repository Structure
 - `lab1/` — OOP Fundamentals (Vector, Polynomial)
@@ -8,16 +11,13 @@ This repository contains the lab assignments for the "Design of Intelligent Syst
 - `lab3/` — Large-Scale OOP Project (Online Learning Platform)
 
 ## Build & Test
-The project builds and tests from the console without an IDE. A CI/CD pipeline is configured via GitHub Actions.
+The project builds and tests from the console without an IDE. To run the full test suite and check coverage locally:
 
-To run tests and check coverage locally:
 ```bash
 # Example for Lab 2
 cd lab2/Pharma_Distribution
-python -m coverage run tests/testPolynomial.py
-for report : 
+python -m coverage run --source=src -m unittest discover -s tests -p "test_*.py"
 python -m coverage report -m
-
 
 
 
