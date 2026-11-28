@@ -1,3 +1,5 @@
 class LoyaltyProgram:
-    def __init__(self, client): self.client, self.points = client, 0
-    def add_points(self, amt: float): self.points += int(amt)
+    def __init__(self, name: str):
+        self.name = name
+    def get_name(self):
+        return self.name

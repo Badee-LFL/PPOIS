@@ -1,3 +1,5 @@
 class Complaint:
-    def __init__(self, client, text: str): self.client, self.text, self.is_resolved = client, text, False
-    def resolve(self): self.is_resolved = True
+    def __init__(self, name: str):
+        self.name = name
+    def get_name(self):
+        return self.name

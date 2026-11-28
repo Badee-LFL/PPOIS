@@ -1,3 +1,5 @@
 class Barcode:
-    def __init__(self, code: str): self.code = code
-    def scan(self) -> str: return f"Scanned {self.code}"
+    def __init__(self, name: str):
+        self.name = name
+    def get_name(self):
+        return self.name

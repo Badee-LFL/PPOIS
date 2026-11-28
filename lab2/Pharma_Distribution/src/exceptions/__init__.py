@@ -1,13 +1,9 @@
-from .base import PharmaException
-from .capacity_exceeded import WarehouseCapacityException
-from .cold_chain import ColdChainViolationException
-from .duplicate_medicine import DuplicateMedicineException
-from .expired_batch import ExpiredBatchException
-from .insufficient_stock import InsufficientStockException
-from .invalid_client import InvalidClientDataException
-from .invalid_medicine import InvalidMedicineDataException
-from .invalid_order import InvalidOrderStateException
-from .payment_failed import PaymentFailedException
-from .prescription_required import PrescriptionRequiredException
-from .recall_active import RecallActiveException
-from .supplier_not_approved import SupplierNotApprovedException
+class PharmaException(Exception): pass
+class InsufficientStockException(PharmaException): pass
+class InvalidMedicineDataException(PharmaException): pass
+class InvalidOrderStateException(PharmaException): pass
+class PrescriptionRequiredException(PharmaException): pass
+class SupplierNotApprovedException(PharmaException): pass
+class ColdChainViolationException(PharmaException): pass
+class PaymentFailedException(PharmaException): pass
+class WarehouseCapacityException(PharmaException): pass

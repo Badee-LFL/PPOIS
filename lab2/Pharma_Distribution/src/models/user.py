@@ -1,7 +1,5 @@
 class User:
-    def __init__(self, name: str, role: str):
+    def __init__(self, name: str):
         self.name = name
-        self.role = role
-
-    def update_name(self, new_name: str):
-        self.name = new_name
+    def get_name(self):
+        return self.name

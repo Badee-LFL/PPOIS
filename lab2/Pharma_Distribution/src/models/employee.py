@@ -1,7 +1,5 @@
 class Employee:
-    def __init__(self, name: str, role: str, salary: float):
+    def __init__(self, name: str):
         self.name = name
-        self.role = role
-        self.salary = salary
-    def give_raise(self, percent: float):
-        self.salary += self.salary * (percent / 100)
+    def get_name(self):
+        return self.name

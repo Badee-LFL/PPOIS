@@ -1,7 +1,5 @@
 class Driver:
-    def __init__(self, name: str, license: str):
+    def __init__(self, name: str):
         self.name = name
-        self.license = license
-        self.location = "Warehouse"
-    def update_location(self, loc: str):
-        self.location = loc
+    def get_name(self):
+        return self.name

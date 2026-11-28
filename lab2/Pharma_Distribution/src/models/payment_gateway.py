@@ -1,3 +1,5 @@
 class PaymentGateway:
-    def __init__(self, name: str): self.name = name
-    def authorize(self, amt: float) -> bool: return amt > 0
+    def __init__(self, name: str):
+        self.name = name
+    def get_name(self):
+        return self.name

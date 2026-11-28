@@ -1,3 +1,5 @@
 class BatchTracker:
-    def __init__(self, batch): self.batch, self.location = batch, "Manufacturer"
-    def update_location(self, loc: str): self.location = loc
+    def __init__(self, name: str):
+        self.name = name
+    def get_name(self):
+        return self.name

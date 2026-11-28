@@ -1,3 +1,5 @@
 class NotificationService:
-    def __init__(self): self.messages = []
-    def send_email(self, email: str, msg: str): self.messages.append(f"To {email}: {msg}")
+    def __init__(self, name: str):
+        self.name = name
+    def get_name(self):
+        return self.name

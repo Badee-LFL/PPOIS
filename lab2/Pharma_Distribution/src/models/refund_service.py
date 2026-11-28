@@ -1,4 +1,5 @@
 class RefundService:
-    def __init__(self): self.refunds = []
-    def process_refund(self, payment, amt: float):
-        self.refunds.append({"payment": payment, "amount": amt}); payment.status = "Refunded"
+    def __init__(self, name: str):
+        self.name = name
+    def get_name(self):
+        return self.name
