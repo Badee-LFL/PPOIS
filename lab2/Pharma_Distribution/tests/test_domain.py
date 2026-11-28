@@ -1,35 +1,34 @@
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+import unittest
+from src.models import Medicine, Batch, Client, Order, OrderLine
+from src.exceptions import *
 
-import pytest
-from domain import Manufacturer, Medicine, Batch, Order, OrderLine, Client, ColdStorageZone
-from exceptions import InvalidMedicineDataException, InsufficientStockException, ColdChainViolationException
+class TestLab2Pharma(unittest.TestCase):
+    def setUp(self):
+        self.medicine = Medicine("Aspirin", "500mg", False)
+        self.medicine.set_price(10.0)
+        self.batch = Batch("B001", self.medicine, 100, "2026-12-31")
+        self.medicine.attach_batch(self.batch)
+        self.client = Client("City Hospital")
 
-@pytest.fixture
-def sample_medicine():
-    mfg = Manufacturer("Test", "US")
-    med = Medicine("TestMed", "100mg", mfg)
-    med.set_price(10.0)
-    return med
+    def test_stock_and_batch(self):
+        self.assertEqual(self.medicine.calculate_available_stock(), 100)
+        self.batch.deduct_quantity(20)
+        self.assertEqual(self.medicine.calculate_available_stock(), 80)
+        with self.assertRaises(InsufficientStockException):
+            self.batch.deduct_quantity(100)
 
-def test_invalid_medicine_data():
-    with pytest.raises(InvalidMedicineDataException):
-        Medicine("", "500mg", Manufacturer("Test", "US"))
-
-def test_negative_price(sample_medicine):
-    with pytest.raises(InvalidMedicineDataException):
-        sample_medicine.set_price(-5.0)
-
-def test_insufficient_stock(sample_medicine):
-    client = Client(1, "Test Client")
-    order = Order(1, client)
-    order.add_line(OrderLine(sample_medicine, 10))
-    
-    with pytest.raises(InsufficientStockException):
+    def test_order_flow(self):
+        order = Order(1, self.client)
+        order.add_line(OrderLine(self.medicine, 5)) 
+        self.assertEqual(order.calculate_total(), 50.0)
         order.submit()
+        self.assertEqual(order.state, "Submitted")
+        
+    def test_invalid_order(self):
+        order = Order(2, self.client)
+        order.submit()
+        with self.assertRaises(InvalidOrderStateException):
+            order.add_line(OrderLine(self.medicine, 5))
 
-def test_cold_chain_violation():
-    zone = ColdStorageZone("Z1", 2.0, 8.0)
-    with pytest.raises(ColdChainViolationException):
-        zone.check_temperature(15.0)
+if __name__ == '__main__':
+    unittest.main()

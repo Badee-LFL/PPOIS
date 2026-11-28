@@ -1,0 +1,9 @@
+class PharmaException(Exception): pass
+class InsufficientStockException(PharmaException): pass
+class InvalidMedicineDataException(PharmaException): pass
+class InvalidOrderStateException(PharmaException): pass
+class PrescriptionRequiredException(PharmaException): pass
+class SupplierNotApprovedException(PharmaException): pass
+class ColdChainViolationException(PharmaException): pass
+class PaymentFailedException(PharmaException): pass
+class WarehouseCapacityException(PharmaException): pass
