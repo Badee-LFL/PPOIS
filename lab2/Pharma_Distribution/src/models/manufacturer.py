@@ -1,5 +1,7 @@
 class Manufacturer:
     def __init__(self, name: str):
         self.name = name
-    def get_name(self):
-        return self.name
+        self.medicines = []
+
+    def add_medicine(self, medicine):
+        self.medicines.append(medicine)
