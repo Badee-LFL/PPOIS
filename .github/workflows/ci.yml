@@ -7,63 +7,44 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test-vector:
+  test-lab1-and-lab2:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.13'
+        python-version: '3.11'
+        
     - name: Install dependencies
-      run: pip install coverage
-    - name: Run Vector tests
+      run: |
+        python -m pip install --upgrade pip
+        pip install coverage
+
+    # --- LAB 1 TESTS ---
+    - name: Run Lab 1 - Vector
       working-directory: ./lab1/3D_Vector
       run: |
-        echo "[run]" > .coveragerc
-        echo "omit = src/main.py" >> .coveragerc
         python -m coverage run tests/testVector.py
         python -m coverage report -m --fail-under=90
 
-  test-polynomial:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.13'
-    - name: Install dependencies
-      run: pip install coverage
-    - name: Run Polynomial tests
+    - name: Run Lab 1 - Polynomial
       working-directory: ./lab1/Polynomial
       run: |
-        echo "[run]" > .coveragerc
-        echo "omit = src/main.py" >> .coveragerc
         python -m coverage run tests/testPolynomial.py
         python -m coverage report -m --fail-under=90
 
-  test-lab2-pharma:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.13'
-    - name: Install dependencies
-      run: pip install coverage
-    - name: Run Lab 2 tests
+    # --- LAB 2 TESTS ---
+    - name: Run Lab 2 - Pharma
       working-directory: ./lab2/Pharma_Distribution
       run: |
-        echo "[run]" > .coveragerc
-        echo "omit = src/main.py" >> .coveragerc
-        python -m coverage run tests/test_domain.py
+        # This uses the .coveragerc file automatically
+        python -m coverage run --source=src -m unittest discover -s tests -p "test_*.py"
         python -m coverage report -m --fail-under=90
 
-#combined release  
   release-project:
-    needs: [test-vector, test-polynomial, test-lab2-pharma] # all tests must pass
+    needs: [test-lab1-and-lab2]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' 
     permissions:
@@ -73,20 +54,14 @@ jobs:
       
       - name: Zip all completed Labs
         run: |
-          # Create a folder to hold the release contents
           mkdir release
-          # Copy the labs into the release folder
           cp -r lab1 release/
           cp -r lab2 release/
-          # cp -r lab3 release/
-          
-          # Zip the entire release folder
           zip -r all-labs-release.zip ./release
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          #  automatically increment the build number so it doesn't overwrite old releases
           tag_name: "v1.0-build-${{ github.run_number }}"
           name: "All Labs Release - Build ${{ github.run_number }}"
           generate_release_notes: true
